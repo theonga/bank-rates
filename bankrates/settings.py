@@ -17,7 +17,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-    "https://bank-rates.onrender.com",
+    "bank-rates.onrender.com",
+    'erizel001.com',
     "localhost",
     "127.0.0.1"
 ]
