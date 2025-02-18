@@ -18,6 +18,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = [
     "bank-rates.onrender.com",
+    "api.erizel001.com",
     'erizel001.com',
     "localhost",
     "127.0.0.1"
@@ -55,8 +56,8 @@ MIDDLEWARE = [
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # Add your frontend URL here
-    'https://erizel001.onrender.com/',
-    'https://bank-rates.onrender.com/',
+    'https://erizel001.onrender.com',
+    'https://bank-rates.onrender.com',
     'https://erizel001.com',
 ]
 
