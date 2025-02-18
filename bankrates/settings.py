@@ -55,6 +55,9 @@ MIDDLEWARE = [
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # Add your frontend URL here
+    'https://erizel001.onrender.com/',
+    'https://bank-rates.onrender.com/',
+    'https://erizel001.com',
 ]
 
 ROOT_URLCONF = 'bankrates.urls'
