@@ -46,7 +46,6 @@ class ExchangeRateSerializer(serializers.ModelSerializer):
 
 
 class AdvertSerializer(serializers.ModelSerializer):
-    bank_details = BankSerializer(source='bank', read_only=True)
 
     class Meta:
         model = Advert
