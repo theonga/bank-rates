@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Bank, Branch, ExchangeRate, Currency
+from .models import Bank, Branch, ExchangeRate, Currency, Advert
 from users.serializers import ProfileSerializer
 from users.models import Profile
 
@@ -44,13 +44,22 @@ class ExchangeRateSerializer(serializers.ModelSerializer):
         model = ExchangeRate
         fields = ['id', 'bank', 'currency', 'buy_price', 'sell_price']
 
+
+class AdvertSerializer(serializers.ModelSerializer):
+    bank_details = BankSerializer(source='bank', read_only=True)
+
+    class Meta:
+        model = Advert
+        fields = ['id', 'image']
+
 class BankDetailSerializer(serializers.ModelSerializer):
     branches = BranchSerializer(many=True, read_only=True)
     exchange_rates = ExchangeRateSerializer(many=True, read_only=True)
+    adverts = AdvertSerializer(many=True, read_only=True)
 
     class Meta:
         model = Bank
-        fields = ['name', 'logo', 'color', 'branches', 'exchange_rates']
+        fields = ['name', 'logo', 'color', 'branches', 'exchange_rates', 'adverts']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -69,5 +78,6 @@ class BankDetailSerializer(serializers.ModelSerializer):
                     'icon': rate['currency']['icon']
                 }
                 for rate in representation['exchange_rates']
-            ]
+            ],
+            'adverts': representation['adverts']
         }

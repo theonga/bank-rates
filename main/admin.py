@@ -1,11 +1,16 @@
 from django.contrib import admin
-from .models import Bank, Branch, ExchangeRate, Currency
+from .models import Bank, Branch, ExchangeRate, Currency, Advert
 
 @admin.register(Bank)
 class BankAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'manager', 'color')
     search_fields = ('name', 'manager__username')
     list_filter = ('color',)
+
+@admin.register(Advert)
+class AdvertAdmin(admin.ModelAdmin):
+    list_display = ('id', 'bank', 'image')
+    search_fields = ('bank__name',)
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):

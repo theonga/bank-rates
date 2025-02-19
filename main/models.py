@@ -56,3 +56,15 @@ class ExchangeRate(models.Model):
         verbose_name_plural = 'Exchange Rates'
         verbose_name = 'Exchange Rate'
         
+
+# Bank adverts
+class Advert(models.Model):
+    bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='adverts')
+    image = models.ImageField(upload_to='adverts/')
+    
+    def __str__(self):
+        return f"{self.bank.name}"
+    
+    class Meta:
+        verbose_name_plural = 'Adverts'
+        verbose_name = 'Advert'
