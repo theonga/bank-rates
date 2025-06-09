@@ -68,3 +68,20 @@ class Advert(models.Model):
     class Meta:
         verbose_name_plural = 'Adverts'
         verbose_name = 'Advert'
+
+class BranchAdvert(models.Model):
+    MEDIA_TYPE_CHOICES = [
+        ('image', 'Image'),
+        ('video', 'Video'),
+    ]
+
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_adverts')
+    media = models.FileField(upload_to='branch_adverts/')
+    media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES, default='image')
+
+    def __str__(self):
+        return f"{self.branch.name} - {self.media_type}"
+    
+    class Meta:
+        verbose_name_plural = 'Branch Adverts'
+        verbose_name = 'Branch Advert'

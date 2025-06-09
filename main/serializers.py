@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Bank, Branch, ExchangeRate, Currency, Advert
+from .models import Bank, Branch, ExchangeRate, Currency, Advert, BranchAdvert
 from users.serializers import ProfileSerializer
 from users.models import Profile
 
@@ -14,15 +14,21 @@ class BankSerializer(serializers.ModelSerializer):
         model = Bank
         fields = ['id', 'name', 'logo', 'color', 'manager']
 
+class BranchAdvertSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BranchAdvert
+        fields = ['id', 'media', 'media_type']
+
 class BranchSerializer(serializers.ModelSerializer):
     bank = serializers.PrimaryKeyRelatedField(queryset=Bank.objects.all(), write_only=True)
     manager = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all(), write_only=True)
     bank_details = BankSerializer(source='bank', read_only=True)
     manager_details = ProfileSerializer(source='manager', read_only=True)
+    adverts = BranchAdvertSerializer(many=True, read_only=True)  # Include BranchAdvertSerializer
 
     class Meta:
         model = Branch
-        fields = ['id', 'name', 'bank', 'manager', 'bank_details', 'manager_details']
+        fields = ['id', 'name', 'bank', 'manager', 'bank_details', 'manager_details', 'adverts']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -34,6 +40,18 @@ class BranchSerializer(serializers.ModelSerializer):
             'id': instance.manager.id if instance.manager else None,
             'email': instance.manager.email if instance.manager else None
         }
+
+        # Separate images and videos
+        adverts = instance.branch_adverts.all()
+        images = adverts.filter(media_type='image')
+        videos = adverts.filter(media_type='video')
+
+        representation['images'] = BranchAdvertSerializer(images, many=True).data
+        representation['videos'] = BranchAdvertSerializer(videos, many=True).data
+
+        # Remove the combined adverts field
+        representation.pop('adverts', None)
+
         return representation
 
 class ExchangeRateSerializer(serializers.ModelSerializer):
