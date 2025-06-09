@@ -1,5 +1,5 @@
 from rest_framework import viewsets, generics, status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from .models import Bank, Branch, ExchangeRate, Currency
 from .serializers import BankSerializer, BranchSerializer, ExchangeRateSerializer, BankDetailSerializer, CurrencySerializer
 from .permissions import IsBankManager, IsBranchManager, IsBankManagerForBranch
@@ -8,11 +8,12 @@ from rest_framework.response import Response
 
 class BankViewSet(viewsets.ModelViewSet):
     serializer_class = BankSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         user = self.request.user
-        return Bank.objects.filter(manager=user)
+        # Bank.objects.filter(manager=user)
+        return Bank.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -35,7 +36,7 @@ class BranchViewSet(viewsets.ModelViewSet):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             self.permission_classes = [IsAuthenticatedOrReadOnly, IsBankManager, IsBankManagerForBranch]
         else:
-            self.permission_classes = [IsAuthenticatedOrReadOnly]
+            self.permission_classes = [AllowAny]
         return super().get_permissions()
 
 class ExchangeRateViewSet(viewsets.ModelViewSet):

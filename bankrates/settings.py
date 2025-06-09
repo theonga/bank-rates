@@ -60,6 +60,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://erizel001.onrender.com',
     'https://bank-rates.onrender.com',
     'https://erizel001.com',
+    'https://netone.erizel001.com',
+    'http://localhost:3000',
 ]
 
 ROOT_URLCONF = 'bankrates.urls'
