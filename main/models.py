@@ -73,10 +73,12 @@ class BranchAdvert(models.Model):
     MEDIA_TYPE_CHOICES = [
         ('image', 'Image'),
         ('video', 'Video'),
+        ('text', 'Text')
     ]
 
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='branch_adverts')
-    media = models.FileField(upload_to='branch_adverts/')
+    media = models.FileField(upload_to='branch_adverts/', null=True, blank=True)
+    text = models.TextField(help_text="Branch Advert text", null=True, blank=True)
     media_type = models.CharField(max_length=10, choices=MEDIA_TYPE_CHOICES, default='image')
 
     def __str__(self):

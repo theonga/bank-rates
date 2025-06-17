@@ -45,9 +45,11 @@ class BranchSerializer(serializers.ModelSerializer):
         adverts = instance.branch_adverts.all()
         images = adverts.filter(media_type='image')
         videos = adverts.filter(media_type='video')
+        texts = adverts.filters(media_text="text")
 
         representation['images'] = BranchAdvertSerializer(images, many=True).data
         representation['videos'] = BranchAdvertSerializer(videos, many=True).data
+        representation['text'] = BranchAdvertSerializer(texts, many=True).data
 
         # Remove the combined adverts field
         representation.pop('adverts', None)
