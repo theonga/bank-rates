@@ -17,7 +17,7 @@ class BankSerializer(serializers.ModelSerializer):
 class BranchAdvertSerializer(serializers.ModelSerializer):
     class Meta:
         model = BranchAdvert
-        fields = ['id', 'media', 'media_type']
+        fields = ['id', 'media', 'media_type', 'text']
 
 class BranchSerializer(serializers.ModelSerializer):
     bank = serializers.PrimaryKeyRelatedField(queryset=Bank.objects.all(), write_only=True)
@@ -45,7 +45,7 @@ class BranchSerializer(serializers.ModelSerializer):
         adverts = instance.branch_adverts.all()
         images = adverts.filter(media_type='image')
         videos = adverts.filter(media_type='video')
-        texts = adverts.filters(media_text="text")
+        texts = adverts.filter(media_type="text")
 
         representation['images'] = BranchAdvertSerializer(images, many=True).data
         representation['videos'] = BranchAdvertSerializer(videos, many=True).data
