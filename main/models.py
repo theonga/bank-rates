@@ -33,6 +33,7 @@ class Branch(models.Model):
     name = models.CharField(max_length=255)
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='branches')
     manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='managed_branches')
+    password = models.CharField(max_length=255, default="12345678")
 
     def __str__(self):
         return f"{self.name} - {self.bank.name}"
@@ -40,6 +41,10 @@ class Branch(models.Model):
     class Meta:
         verbose_name_plural = 'Branches'
         verbose_name = 'Branch'
+
+    def check_password(self, raw_password):
+        # In a real app, use hashing here
+        return self.password == raw_password
 
 # Exchange Rate Model
 class ExchangeRate(models.Model):

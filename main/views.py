@@ -5,7 +5,39 @@ from .serializers import BankSerializer, BranchSerializer, ExchangeRateSerialize
 from .permissions import IsBankManager, IsBranchManager, IsBankManagerForBranch
 from datetime import datetime
 from rest_framework.response import Response
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
+
+@csrf_exempt
+def auth_branch(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": "Only POST allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        branch_id = int(data.get("branchId"))
+        bank_id = int(data.get("bankId"))
+        password = data.get("password", "")
+    except (ValueError, TypeError, json.JSONDecodeError):
+        return JsonResponse({"success": False, "message": "Invalid input"}, status=400)
+
+    try:
+        bank = Bank.objects.get(id=bank_id)
+    except Bank.DoesNotExist:
+        return JsonResponse({"success": False, "message": "Bank not found"}, status=404)
+
+    try:
+        branch = Branch.objects.get(branch_id=branch_id, bank=bank)
+    except Branch.DoesNotExist:
+        return JsonResponse({"success": False, "message": "Branch not found"}, status=404)
+
+    if branch.check_password(password):
+        return JsonResponse({"success": True})
+    else:
+        return JsonResponse({"success": False, "message": "Invalid password"}, status=401)
+    
 class BankViewSet(viewsets.ModelViewSet):
     serializer_class = BankSerializer
     permission_classes = [AllowAny]
