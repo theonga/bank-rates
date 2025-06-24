@@ -24,14 +24,9 @@ def auth_branch(request):
         return JsonResponse({"success": False, "message": "Invalid input"}, status=400)
 
     try:
-        bank = Bank.objects.get(id=bank_id)
-    except Bank.DoesNotExist:
-        return JsonResponse({"success": False, "message": "Bank not found"}, status=404)
-
-    try:
-        branch = Branch.objects.get(branch_id=branch_id, bank=bank)
+        branch = Branch.objects.select_related('bank').get(id=branch_id, bank_id=bank_id)
     except Branch.DoesNotExist:
-        return JsonResponse({"success": False, "message": "Branch not found"}, status=404)
+        return JsonResponse({"success": False, "message": "Branch with given Bank not found"}, status=404)
 
     if branch.check_password(password):
         return JsonResponse({"success": True})
