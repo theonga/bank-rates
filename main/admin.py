@@ -24,7 +24,7 @@ class AdvertAdmin(admin.ModelAdmin):
 class BranchAdvertInline(admin.TabularInline):  # Inline for BranchAdvert
     model = BranchAdvert
     extra = 1  # Number of empty forms to display for adding new adverts
-    fields = ('media', 'text' 'media_type')  # Fields to display in the inline form
+    fields = ('media', 'text', 'media_type')  # Fields to display in the inline form
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
