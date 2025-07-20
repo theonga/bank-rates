@@ -8,6 +8,7 @@ from rest_framework.response import Response
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 
 @csrf_exempt
@@ -29,6 +30,8 @@ def auth_branch(request):
         return JsonResponse({"success": False, "message": "Branch with given Bank not found"}, status=404)
 
     if branch.check_password(password):
+        branch.last_login = timezone.now()
+        branch.save(update_fields=['last_login'])
         return JsonResponse({"success": True})
     else:
         return JsonResponse({"success": False, "message": "Invalid password"}, status=401)

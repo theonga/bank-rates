@@ -28,7 +28,7 @@ class BranchAdvertInline(admin.TabularInline):  # Inline for BranchAdvert
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'bank')
+    list_display = ('id', 'name', 'bank', 'last_login')
     search_fields = ('name', 'bank__name')
     list_filter = ('bank',)
     inlines = [BranchAdvertInline]  # Add the inline to the Branch admin
@@ -44,37 +44,37 @@ class CurrencyAdmin(admin.ModelAdmin):
     list_display = ('id', 'code', 'name')
     search_fields = ('code', 'name')
 
-class BranchAdvertAdminForm(forms.ModelForm):
-    apply_to_all_branches = forms.BooleanField(
-        required=False,
-        label="Apply to all branches of this bank",
-        help_text="If checked, this advert will be added to all branches of the selected branch's bank."
-    )
+# class BranchAdvertAdminForm(forms.ModelForm):
+#     apply_to_all_branches = forms.BooleanField(
+#         required=False,
+#         label="Apply to all branches of this bank",
+#         help_text="If checked, this advert will be added to all branches of the selected branch's bank."
+#     )
 
-    class Meta:
-        model = BranchAdvert
-        fields = '__all__'
+#     class Meta:
+#         model = BranchAdvert
+#         fields = '__all__'
 
-@admin.register(BranchAdvert)
-class BranchAdvertAdmin(admin.ModelAdmin):
-    form = BranchAdvertAdminForm
-    list_display = ('id', 'branch', 'media', 'media_type')
-    search_fields = ('branch__name', 'media_type')
-    list_filter = ('media_type', 'branch')
+# @admin.register(BranchAdvert)
+# class BranchAdvertAdmin(admin.ModelAdmin):
+#     form = BranchAdvertAdminForm
+#     list_display = ('id', 'branch', 'media', 'media_type')
+#     search_fields = ('branch__name', 'media_type')
+#     list_filter = ('media_type', 'branch')
 
-    def save_model(self, request, obj, form, change):
-        apply_to_all = form.cleaned_data.get('apply_to_all_branches', False)
-        if apply_to_all and obj.branch:
-            # Save the original object for the selected branch
-            super().save_model(request, obj, form, change)
-            # Get all other branches of the same bank
-            other_branches = Branch.objects.filter(bank=obj.branch.bank).exclude(id=obj.branch.id)
-            for branch in other_branches:
-                BranchAdvert.objects.create(
-                    branch=branch,
-                    media=obj.media,
-                    media_type=obj.media_type,
-                    text=getattr(obj, 'text', None)
-                )
-        else:
-            super().save_model(request, obj, form, change)
+#     def save_model(self, request, obj, form, change):
+#         apply_to_all = form.cleaned_data.get('apply_to_all_branches', False)
+#         if apply_to_all and obj.branch:
+#             # Save the original object for the selected branch
+#             super().save_model(request, obj, form, change)
+#             # Get all other branches of the same bank
+#             other_branches = Branch.objects.filter(bank=obj.branch.bank).exclude(id=obj.branch.id)
+#             for branch in other_branches:
+#                 BranchAdvert.objects.create(
+#                     branch=branch,
+#                     media=obj.media,
+#                     media_type=obj.media_type,
+#                     text=getattr(obj, 'text', None)
+#                 )
+#         else:
+#             super().save_model(request, obj, form, change)

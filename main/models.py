@@ -34,6 +34,7 @@ class Branch(models.Model):
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='branches')
     manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='managed_branches')
     password = models.CharField(max_length=255, default="12345678")
+    last_login = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} - {self.bank.name}"
