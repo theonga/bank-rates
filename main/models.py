@@ -25,7 +25,7 @@ class Bank(models.Model):
         return self.name
     
     class Meta:
-        verbose_name_plural = 'Companies' 
+        verbose_name_plural = 'Company' 
         verbose_name = 'Company' 
 
 # Branch Model
