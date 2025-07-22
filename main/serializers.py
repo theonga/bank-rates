@@ -88,6 +88,7 @@ class BankDetailSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        branch_ids = [branch['id'] for branch in representation['branches']]
         return {
             'bankName': representation['name'],
             'logoUrl': representation['logo'],
@@ -104,5 +105,6 @@ class BankDetailSerializer(serializers.ModelSerializer):
                 }
                 for rate in representation['exchange_rates']
             ],
-            'adverts': representation['adverts']
+            'adverts': representation['adverts'],
+            'branchIds': branch_ids 
         }
