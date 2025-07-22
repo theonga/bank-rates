@@ -10,9 +10,14 @@ class CurrencySerializer(serializers.ModelSerializer):
 
 
 class BankSerializer(serializers.ModelSerializer):
+    branches = serializers.SerializerMethodField()
+
     class Meta:
         model = Bank
-        fields = ['id', 'name', 'logo', 'color', 'manager']
+        fields = ['id', 'name', 'logo', 'color', 'manager', 'branches']
+
+    def get_branches(self, obj):
+        return list(obj.branches.values_list('id', flat=True))
 
 class BranchAdvertSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,7 +43,8 @@ class BranchSerializer(serializers.ModelSerializer):
         }
         representation['manager'] = {
             'id': instance.manager.id if instance.manager else None,
-            'email': instance.manager.email if instance.manager else None
+            'email': instance.manager.email if instance.manager else None,
+            'is_superuser': getattr(instance.manager, 'is_superuser', False)
         }
 
         # Separate images and videos
