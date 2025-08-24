@@ -62,7 +62,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://erizel001.com',
     'https://netone.erizel001.com',
     'http://localhost:3000',
-    'https://erizel001-netone.vercel.app'
+    'https://erizel001-netone.vercel.app',
+    'https://unihold.vercel.app'
 ]
 
 ROOT_URLCONF = 'bankrates.urls'
