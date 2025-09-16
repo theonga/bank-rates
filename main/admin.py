@@ -26,23 +26,12 @@ class BranchAdvertInline(admin.TabularInline):  # Inline for BranchAdvert
     extra = 1  # Number of empty forms to display for adding new adverts
     fields = ('media', 'text', 'media_type')  # Fields to display in the inline form
 
-class BranchAdminForm(forms.ModelForm):
-    class Meta:
-        model = Branch
-        exclude = ('bank',) 
-
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):
-    form = BranchAdminForm
     list_display = ('id', 'name', 'last_login')
     search_fields = ('name', )
     list_filter = ('bank',)
     inlines = [BranchAdvertInline]
-
-    def save_model(self, request, obj, form, change):
-        if not obj.pk:  # Only set on creation
-            obj.bank = Bank.objects.first()  # Or use Bank.objects.get(pk=1) for a specific bank
-        super().save_model(request, obj, form, change)
 
 @admin.register(ExchangeRate)
 class ExchangeRateAdmin(admin.ModelAdmin):
